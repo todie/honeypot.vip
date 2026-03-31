@@ -3,23 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>honeypot.vip</title>
+  <title>honeypot.vip — Agentic Threat Intelligence</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Dancing+Script:wght@700&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=Dancing+Script:wght@700&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --honey:  #F2A900;
-      --amber:  #D4870A;
-      --dark:   #0D0600;
-      --dark2:  #1A0B00;
-      --cream:  #FFF5DC;
-      --gold:   #FFD700;
+      --honey:   #F2A900;
+      --amber:   #C97D00;
+      --dark:    #0C0500;
+      --dark2:   #180C00;
+      --cream:   #FFF5DC;
+      --red:     #C41230;
+      --skin:    #F5C4A0;
+      --skin2:   #E8A87A;
+      --hair:    #1A0800;
+      --hair2:   #3D1C00;
     }
 
-    html, body { height: 100%; }
-
+    html { scroll-behavior: smooth; }
     body {
       background: var(--dark);
       color: var(--cream);
@@ -27,418 +30,1106 @@
       overflow-x: hidden;
     }
 
-    /* ─── HONEYCOMB BACKGROUND ─── */
+    /* ─── SHARED ─── */
+    .mono { font-family: 'Courier Prime', monospace; }
+
+    /* ─── HONEYCOMB BG TILE ─── */
     .hex-bg {
-      position: fixed;
-      inset: 0;
-      z-index: 0;
-      background-color: var(--dark);
+      position: fixed; inset: 0; z-index: 0;
       background-image:
-        radial-gradient(ellipse 70% 55% at 65% 55%, rgba(212,135,10,0.10) 0%, transparent 65%),
-        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='97'%3E%3Cpath d='M28 66L0 50V16L28 0l28 16v34L28 66zm0-2l26-15V17L28 2 2 17v32l26 15z' fill='%23F2A900' fill-opacity='0.06'/%3E%3Cpath d='M28 100L0 84V50l28-16 28 16v34L28 100zm0-2l26-15V51L28 36 2 51v32l26 15z' fill='%23F2A900' fill-opacity='0.06'/%3E%3C/svg%3E");
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='104'%3E%3Cpath d='M30 2l28 16v32L30 66 2 50V18L30 2zm0 2L4 19.5v29L30 64l26-15.5v-29L30 4z' fill='%23F2A900' fill-opacity='0.055'/%3E%3Cpath d='M30 70l28 16v32L30 134 2 118V86L30 70zm0 2L4 87.5v29L30 132l26-15.5v-29L30 72z' fill='%23F2A900' fill-opacity='0.055'/%3E%3C/svg%3E");
     }
 
-    /* ─── HONEY DRIP BAR ─── */
+    /* ─── HONEY DRIPS (top) ─── */
     .drip-bar {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 5;
+      position: fixed; top: 0; left: 0; right: 0; z-index: 10;
       pointer-events: none;
     }
-    .drip-bar svg { display: block; width: 100%; height: 130px; }
+    .drip-bar svg { display: block; width: 100%; height: 100px; }
 
-    /* ─── PAGE GRID ─── */
-    .page {
-      position: relative;
-      z-index: 2;
+    /* ═══════════════════════════════════════════
+       HERO
+    ═══════════════════════════════════════════ */
+    #hero {
+      position: relative; z-index: 2;
       min-height: 100vh;
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1fr auto;
       align-items: center;
-      padding: 7rem 5vw 5rem;
+      padding: 6rem 6vw 4rem 8vw;
       gap: 4vw;
     }
 
-    /* ─── FIGURE ─── */
-    .figure-col {
+    .hero-text { max-width: 520px; }
+
+    .eyebrow {
+      font-family: 'Courier Prime', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--amber);
+      margin-bottom: 1.2rem;
       display: flex;
       align-items: center;
-      justify-content: center;
+      gap: 0.6rem;
     }
-    .figure-svg {
-      width: min(320px, 44vw);
-      filter: drop-shadow(0 0 28px rgba(242,169,0,0.35));
-      animation: glow 4s ease-in-out infinite;
+    .eyebrow::before {
+      content: '';
+      display: inline-block;
+      width: 32px; height: 1px;
+      background: var(--amber);
     }
-    @keyframes glow {
-      0%,100% { filter: drop-shadow(0 0 20px rgba(242,169,0,0.3)); }
-      50%      { filter: drop-shadow(0 0 55px rgba(242,169,0,0.7)); }
-    }
-
-    /* ─── TEXT COLUMN ─── */
-    .text-col { text-align: left; }
 
     .wordmark {
       font-family: 'Dancing Script', cursive;
-      font-size: clamp(3.2rem, 7vw, 6.5rem);
-      line-height: 0.95;
+      font-size: clamp(4rem, 8vw, 7.5rem);
+      line-height: 0.9;
       letter-spacing: -0.02em;
+      margin-bottom: 1.2rem;
     }
-    .wordmark .w-honey { color: var(--honey); text-shadow: 0 0 60px rgba(242,169,0,0.55); }
-    .wordmark .w-pot   { color: var(--cream); }
-    .wordmark .w-dot   { color: var(--amber); }
-    .wordmark .w-vip   { color: var(--amber); font-size: 0.45em; vertical-align: 0.15em; letter-spacing: 0.08em; }
+    .wm-h { color: var(--honey); text-shadow: 0 0 80px rgba(242,169,0,0.5); }
+    .wm-p { color: var(--cream); }
+    .wm-dot { color: var(--amber); }
+    .wm-vip {
+      color: var(--amber);
+      font-size: 0.42em;
+      vertical-align: 0.2em;
+      letter-spacing: 0.1em;
+    }
 
-    .tagline {
-      margin-top: 1rem;
-      font-size: clamp(0.9rem, 1.8vw, 1.15rem);
+    .hero-tagline {
+      font-size: clamp(1rem, 2vw, 1.3rem);
       font-style: italic;
-      color: rgba(255,245,220,0.60);
-      letter-spacing: 0.12em;
+      color: rgba(255,245,220,0.65);
+      line-height: 1.5;
+      margin-bottom: 2.5rem;
+      max-width: 400px;
     }
 
-    .rule {
+    .hero-stats {
       display: flex;
-      align-items: center;
-      gap: 0.9rem;
-      margin: 1.8rem 0;
+      gap: 2.5rem;
+      margin-bottom: 3rem;
+      flex-wrap: wrap;
     }
-    .rule::before, .rule::after {
-      content: '';
-      height: 1px;
-      flex: 1;
-      background: linear-gradient(90deg, rgba(242,169,0,0.6), transparent);
+    .stat-block { }
+    .stat-num {
+      font-size: 2.2rem;
+      font-weight: 900;
+      color: var(--honey);
+      line-height: 1;
+      font-family: 'Playfair Display', serif;
     }
-    .rule::after { background: linear-gradient(270deg, rgba(242,169,0,0.6), transparent); }
-    .rule-hex { color: var(--amber); font-size: 1rem; opacity: 0.8; }
-
-    .desc {
+    .stat-label {
       font-family: 'Courier Prime', monospace;
-      font-size: clamp(0.72rem, 1.3vw, 0.88rem);
-      color: rgba(255,245,220,0.48);
-      line-height: 1.85;
-      letter-spacing: 0.04em;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(255,245,220,0.4);
+      margin-top: 0.2rem;
     }
 
-    .cta {
+    .hero-cta-row {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .btn-primary {
       display: inline-block;
-      margin-top: 2.2rem;
-      padding: 0.8rem 2.4rem;
-      border: 1px solid rgba(242,169,0,0.5);
+      padding: 0.85rem 2.4rem;
+      background: var(--honey);
+      color: var(--dark);
       font-family: 'Courier Prime', monospace;
       font-size: 0.8rem;
-      letter-spacing: 0.25em;
+      font-weight: 700;
+      letter-spacing: 0.2em;
       text-transform: uppercase;
-      color: var(--honey);
       text-decoration: none;
-      position: relative;
-      overflow: hidden;
-      transition: color 0.25s;
+      transition: background 0.2s, transform 0.15s;
     }
-    .cta::before {
+    .btn-primary:hover { background: #FFD700; transform: translateY(-2px); }
+    .btn-ghost {
+      display: inline-block;
+      padding: 0.85rem 2.4rem;
+      border: 1px solid rgba(242,169,0,0.4);
+      color: var(--honey);
+      font-family: 'Courier Prime', monospace;
+      font-size: 0.8rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .btn-ghost:hover { border-color: var(--honey); color: #FFD700; }
+
+    /* ─── PIN-UP FIGURE ─── */
+    .hero-figure {
+      position: relative;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-right: 2vw;
+    }
+    .pinup-svg {
+      width: min(340px, 38vw);
+      height: auto;
+      filter: drop-shadow(0 30px 60px rgba(242,169,0,0.2));
+      animation: float 6s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%,100% { transform: translateY(0); }
+      50%      { transform: translateY(-12px); }
+    }
+
+    /* ═══════════════════════════════════════════
+       DIVIDER
+    ═══════════════════════════════════════════ */
+    .divider {
+      position: relative; z-index: 2;
+      display: flex; align-items: center;
+      gap: 1.2rem;
+      padding: 0 8vw;
+      opacity: 0.35;
+    }
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--honey), transparent);
+    }
+    .divider span { font-size: 1.1rem; color: var(--honey); }
+
+    /* ═══════════════════════════════════════════
+       FEATURES
+    ═══════════════════════════════════════════ */
+    #features {
+      position: relative; z-index: 2;
+      padding: 6rem 8vw;
+    }
+    .section-label {
+      font-family: 'Courier Prime', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--amber);
+      margin-bottom: 0.6rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .section-label::before {
+      content: '';
+      width: 24px; height: 1px;
+      background: var(--amber);
+    }
+    .section-title {
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 700;
+      color: var(--cream);
+      margin-bottom: 3.5rem;
+      max-width: 500px;
+      line-height: 1.2;
+    }
+    .section-title em { color: var(--honey); font-style: normal; }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5px;
+      background: rgba(242,169,0,0.08);
+    }
+    .feat-card {
+      background: var(--dark);
+      padding: 2.2rem 2rem;
+      transition: background 0.25s;
+      position: relative;
+    }
+    .feat-card::before {
       content: '';
       position: absolute;
-      inset: 0;
-      background: var(--honey);
-      transform: scaleX(0);
-      transform-origin: left;
-      transition: transform 0.25s ease;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: transparent;
+      transition: background 0.25s;
     }
-    .cta:hover { color: var(--dark); }
-    .cta:hover::before { transform: scaleX(1); }
-    .cta span { position: relative; z-index: 1; }
+    .feat-card:hover { background: #110800; }
+    .feat-card:hover::before { background: var(--honey); }
 
-    /* ─── BOTTOM STATUS BAR ─── */
-    .status-bar {
-      position: fixed;
-      bottom: 0; left: 0; right: 0;
-      z-index: 20;
+    .feat-icon {
+      font-size: 1.8rem;
+      margin-bottom: 1.2rem;
+      display: block;
+    }
+    .feat-name {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--cream);
+      margin-bottom: 0.7rem;
+      letter-spacing: 0.02em;
+    }
+    .feat-desc {
+      font-family: 'Courier Prime', monospace;
+      font-size: 0.8rem;
+      color: rgba(255,245,220,0.45);
+      line-height: 1.75;
+    }
+
+    /* ═══════════════════════════════════════════
+       HOW IT WORKS
+    ═══════════════════════════════════════════ */
+    #how {
+      position: relative; z-index: 2;
+      padding: 6rem 8vw;
+      background: var(--dark2);
+    }
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 3rem;
+      margin-top: 3rem;
+      position: relative;
+    }
+    .steps::before {
+      content: '';
+      position: absolute;
+      top: 28px; left: 10%; right: 10%;
+      height: 1px;
+      background: linear-gradient(90deg,
+        transparent,
+        rgba(242,169,0,0.3) 20%,
+        rgba(242,169,0,0.3) 80%,
+        transparent);
+    }
+    .step-num {
+      font-family: 'Courier Prime', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(255,245,220,0.3);
+      margin-bottom: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .step-circle {
+      width: 28px; height: 28px;
+      border: 1px solid rgba(242,169,0,0.4);
+      border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 0.8rem;
-      padding: 0.55rem 2rem;
-      background: rgba(13,6,0,0.92);
-      border-top: 1px solid rgba(242,169,0,0.12);
       font-family: 'Courier Prime', monospace;
-      font-size: 0.68rem;
-      color: rgba(255,245,220,0.28);
-      letter-spacing: 0.18em;
+      font-size: 0.7rem;
+      color: var(--honey);
+      flex-shrink: 0;
+      background: var(--dark2);
+      position: relative;
+      z-index: 1;
+    }
+    .step-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--cream);
+      margin-bottom: 0.8rem;
+    }
+    .step-body {
+      font-family: 'Courier Prime', monospace;
+      font-size: 0.8rem;
+      color: rgba(255,245,220,0.45);
+      line-height: 1.7;
+    }
+    .step-tag {
+      display: inline-block;
+      margin-top: 1rem;
+      padding: 0.25rem 0.75rem;
+      border: 1px solid rgba(242,169,0,0.25);
+      font-family: 'Courier Prime', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      color: var(--amber);
+      text-transform: uppercase;
+    }
+
+    /* ═══════════════════════════════════════════
+       STACK
+    ═══════════════════════════════════════════ */
+    #stack {
+      position: relative; z-index: 2;
+      padding: 5rem 8vw;
+    }
+    .stack-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      margin-top: 2rem;
+    }
+    .stack-badge {
+      padding: 0.5rem 1.2rem;
+      background: rgba(242,169,0,0.06);
+      border: 1px solid rgba(242,169,0,0.15);
+      font-family: 'Courier Prime', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      color: rgba(255,245,220,0.6);
+      text-transform: uppercase;
+      transition: all 0.2s;
+    }
+    .stack-badge:hover {
+      background: rgba(242,169,0,0.12);
+      border-color: rgba(242,169,0,0.4);
+      color: var(--honey);
+    }
+
+    /* ═══════════════════════════════════════════
+       CTA BANNER
+    ═══════════════════════════════════════════ */
+    #cta-banner {
+      position: relative; z-index: 2;
+      padding: 5rem 8vw;
+      background: linear-gradient(135deg, #1A0A00 0%, #2A1100 50%, #1A0A00 100%);
+      border-top: 1px solid rgba(242,169,0,0.12);
+      border-bottom: 1px solid rgba(242,169,0,0.12);
+      text-align: center;
+    }
+    #cta-banner .wordmark {
+      font-size: clamp(2.5rem, 5vw, 4.5rem);
+      margin-bottom: 0.8rem;
+    }
+    .cta-sub {
+      font-family: 'Courier Prime', monospace;
+      font-size: 0.85rem;
+      color: rgba(255,245,220,0.45);
+      letter-spacing: 0.1em;
+      margin-bottom: 2.5rem;
+    }
+
+    /* ═══════════════════════════════════════════
+       FOOTER
+    ═══════════════════════════════════════════ */
+    footer {
+      position: relative; z-index: 2;
+      padding: 2rem 8vw;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid rgba(242,169,0,0.08);
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    footer .mono {
+      font-size: 0.7rem;
+      color: rgba(255,245,220,0.25);
+      letter-spacing: 0.12em;
       text-transform: uppercase;
     }
     .pulse-dot {
+      display: inline-block;
       width: 6px; height: 6px;
-      border-radius: 50%;
       background: #00e87a;
-      flex-shrink: 0;
+      border-radius: 50%;
+      margin-right: 0.5rem;
       animation: pdot 2s ease-in-out infinite;
+      vertical-align: middle;
     }
     @keyframes pdot {
       0%,100% { opacity: 1; box-shadow: 0 0 6px #00e87a; }
-      50%      { opacity: 0.35; box-shadow: none; }
+      50%      { opacity: 0.3; box-shadow: none; }
+    }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 860px) {
+      #hero {
+        grid-template-columns: 1fr;
+        text-align: center;
+        padding-top: 8rem;
+      }
+      .hero-figure { order: -1; }
+      .pinup-svg { width: min(260px, 65vw); }
+      .hero-stats { justify-content: center; }
+      .hero-cta-row { justify-content: center; }
+      .eyebrow { justify-content: center; }
+      .steps::before { display: none; }
+    }
+    @media (max-width: 540px) {
+      .features-grid { grid-template-columns: 1fr; }
     }
 
     /* ─── FLOATING BEES ─── */
     .bee {
       position: fixed;
-      font-size: 1.4rem;
-      pointer-events: none;
-      z-index: 4;
-      filter: drop-shadow(0 0 6px rgba(242,169,0,0.9));
-      animation: beefloat linear infinite;
+      pointer-events: none; z-index: 4;
+      filter: drop-shadow(0 0 5px rgba(242,169,0,0.9));
+      animation: befly linear infinite;
+      font-size: 1.3rem;
     }
-    @keyframes beefloat {
-      0%   { transform: translate(0,0) rotate(0deg);   opacity: 0; }
+    @keyframes befly {
+      0%   { opacity: 0; transform: translate(0,0) rotate(0deg); }
       8%   { opacity: 1; }
       92%  { opacity: 1; }
-      100% { transform: translate(var(--tx),var(--ty)) rotate(var(--tr)); opacity: 0; }
-    }
-
-    /* ─── RESPONSIVE ─── */
-    @media (max-width: 700px) {
-      .page {
-        grid-template-columns: 1fr;
-        padding-top: 8rem;
-        text-align: center;
-      }
-      .text-col { text-align: center; }
-      .figure-svg { width: min(240px, 70vw); }
-      .rule::before { background: linear-gradient(90deg, transparent, rgba(242,169,0,0.6), transparent); }
-      .rule::after  { display: none; }
+      100% { opacity: 0; transform: translate(var(--tx),var(--ty)) rotate(var(--tr)); }
     }
   </style>
 </head>
 <body>
 
-  <div class="hex-bg"></div>
+<div class="hex-bg"></div>
 
-  <!-- ═══ HONEY DRIP BAR ═══ -->
-  <div class="drip-bar">
-    <svg viewBox="0 0 1440 130" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+<!-- ════════════════════════════════
+     HONEY DRIP BAR
+════════════════════════════════ -->
+<div class="drip-bar" aria-hidden="true">
+  <svg viewBox="0 0 1440 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="dg" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%"   stop-color="#A86000"/>
+        <stop offset="100%" stop-color="#F2A900" stop-opacity="0.4"/>
+      </linearGradient>
+    </defs>
+    <rect x="0" y="0" width="1440" height="14" fill="#9A5500"/>
+    <path d="M85,14 Q87,46 85,64 Q83,78 86,88 Q83,78 85,64 Q83,46 81,14Z" fill="url(#dg)"/>
+    <ellipse cx="85" cy="91" rx="5" ry="6.5" fill="#F2A900" opacity="0.65"/>
+    <path d="M230,14 Q234,52 231,74 Q229,88 232,96 Q229,86 231,74 Q228,52 226,14Z" fill="url(#dg)"/>
+    <ellipse cx="231" cy="99" rx="6" ry="8" fill="#F2A900" opacity="0.6"/>
+    <path d="M420,14 Q423,44 421,60 Q419,70 421,76 Q419,67 421,60 Q419,44 417,14Z" fill="url(#dg)"/>
+    <ellipse cx="420" cy="79" rx="4" ry="5.5" fill="#F2A900" opacity="0.7"/>
+    <path d="M610,14 Q616,58 612,84 Q610,98 614,100 Q610,96 612,84 Q608,58 606,14Z" fill="url(#dg)"/>
+    <ellipse cx="612" cy="100" rx="7" ry="0" fill="#F2A900" opacity="0"/>
+    <!-- big drip -->
+    <path d="M614,84 Q614,93 612,100" stroke="#F2A900" stroke-width="8" fill="none" stroke-linecap="round" opacity="0.55"/>
+    <path d="M820,14 Q824,48 822,65 Q820,76 822,82 Q820,73 822,65 Q820,48 818,14Z" fill="url(#dg)"/>
+    <ellipse cx="821" cy="85" rx="4" ry="5" fill="#F2A900" opacity="0.72"/>
+    <path d="M1020,14 Q1026,55 1023,78 Q1021,92 1024,98 Q1021,90 1023,78 Q1020,55 1016,14Z" fill="url(#dg)"/>
+    <ellipse cx="1023" cy="100" rx="5.5" ry="7" fill="#F2A900" opacity="0.6"/>
+    <path d="M1190,14 Q1194,44 1192,60 Q1190,72 1192,79 Q1190,70 1192,60 Q1190,44 1188,14Z" fill="url(#dg)"/>
+    <ellipse cx="1191" cy="82" rx="4" ry="5" fill="#F2A900" opacity="0.7"/>
+    <path d="M1360,14 Q1363,42 1361,56 Q1360,65 1362,71 Q1360,63 1361,56 Q1360,42 1358,14Z" fill="url(#dg)"/>
+    <ellipse cx="1361" cy="74" rx="3.5" ry="4.5" fill="#F2A900" opacity="0.68"/>
+  </svg>
+</div>
+
+<!-- ════════════════════════════════
+     HERO
+════════════════════════════════ -->
+<section id="hero">
+  <div class="hero-text">
+    <p class="eyebrow">Research-grade threat intelligence</p>
+    <h1 class="wordmark">
+      <span class="wm-h">honey</span><span class="wm-p">pot</span><span class="wm-dot">.</span><span class="wm-vip">VIP</span>
+    </h1>
+    <p class="hero-tagline">
+      The sweetest trap on the internet.<br>
+      Every agent that walks in walks out tagged, traced, and logged.
+    </p>
+
+    <div class="hero-stats">
+      <div class="stat-block">
+        <div class="stat-num">24/7</div>
+        <div class="stat-label">Active monitoring</div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-num">&lt;15s</div>
+        <div class="stat-label">Prometheus scrape</div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-num">100%</div>
+        <div class="stat-label">Tool calls logged</div>
+      </div>
+    </div>
+
+    <div class="hero-cta-row">
+      <a href="#features" class="btn-primary">See how it works</a>
+      <a href="https://github.com/todie/honeypot.vip" class="btn-ghost">GitHub</a>
+    </div>
+  </div>
+
+  <!-- ─── PIN-UP FIGURE ─── -->
+  <div class="hero-figure">
+    <svg class="pinup-svg" viewBox="0 0 280 540" xmlns="http://www.w3.org/2000/svg">
       <defs>
-        <linearGradient id="dg" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%"   stop-color="#B36800"/>
-          <stop offset="100%" stop-color="#F2A900" stop-opacity="0.55"/>
+        <radialGradient id="skinGrad" cx="45%" cy="35%" r="60%">
+          <stop offset="0%"   stop-color="#FDDBB8"/>
+          <stop offset="100%" stop-color="#E8A060"/>
+        </radialGradient>
+        <radialGradient id="skinGrad2" cx="50%" cy="30%" r="60%">
+          <stop offset="0%"   stop-color="#FDDBB8"/>
+          <stop offset="100%" stop-color="#D49060"/>
+        </radialGradient>
+        <linearGradient id="dressGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%"   stop-color="#FFD740"/>
+          <stop offset="50%"  stop-color="#F2A900"/>
+          <stop offset="100%" stop-color="#C07200"/>
         </linearGradient>
+        <linearGradient id="dressSkirt" x1="30%" y1="0%" x2="70%" y2="100%">
+          <stop offset="0%"   stop-color="#F2A900"/>
+          <stop offset="100%" stop-color="#9A5500"/>
+        </linearGradient>
+        <linearGradient id="hairGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%"   stop-color="#2C1200"/>
+          <stop offset="100%" stop-color="#0C0400"/>
+        </linearGradient>
+        <linearGradient id="jarGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%"   stop-color="#FFD740"/>
+          <stop offset="100%" stop-color="#C07200"/>
+        </linearGradient>
+        <filter id="softblur">
+          <feGaussianBlur stdDeviation="1.2"/>
+        </filter>
       </defs>
-      <!-- solid bar -->
-      <rect x="0" y="0" width="1440" height="18" fill="#C07200"/>
-      <!-- drips -->
-      <path d="M90,18 Q93,58 91,82 Q89,100 92,114 Q89,100 91,82 Q89,58 87,18Z" fill="url(#dg)"/>
-      <ellipse cx="91" cy="117" rx="5" ry="7" fill="#F2A900" opacity="0.7"/>
 
-      <path d="M240,18 Q245,65 242,92 Q240,108 243,120 Q240,108 242,92 Q239,65 236,18Z" fill="url(#dg)"/>
-      <ellipse cx="242" cy="123" rx="6" ry="8" fill="#F2A900" opacity="0.6"/>
+      <!-- ── SHADOW (ground) ── -->
+      <ellipse cx="155" cy="532" rx="90" ry="8" fill="rgba(0,0,0,0.4)" filter="url(#softblur)"/>
 
-      <path d="M430,18 Q434,55 432,74 Q430,86 432,93 Q430,83 432,74 Q430,55 428,18Z" fill="url(#dg)"/>
-      <ellipse cx="431" cy="96" rx="4" ry="6" fill="#F2A900" opacity="0.75"/>
+      <!-- ══════════════════════════════════
+           HONEY JAR (left, she leans on it)
+      ══════════════════════════════════ -->
+      <!-- jar body -->
+      <rect x="28" y="390" width="66" height="88" rx="12" ry="12" fill="url(#jarGrad)" opacity="0.92"/>
+      <!-- jar shine -->
+      <rect x="36" y="400" width="12" height="60" rx="6" fill="rgba(255,255,255,0.18)"/>
+      <!-- jar label band -->
+      <rect x="28" y="420" width="66" height="30" rx="0" fill="rgba(0,0,0,0.18)"/>
+      <!-- label text -->
+      <text x="61" y="440" font-family="Courier Prime, monospace" font-size="8.5"
+            font-weight="700" fill="#FFE080" text-anchor="middle" letter-spacing="2">HONEY</text>
+      <!-- jar lid -->
+      <rect x="24" y="382" width="74" height="14" rx="6" fill="#A86000"/>
+      <rect x="30" y="382" width="62" height="7" rx="4" fill="#C87800"/>
+      <!-- honey drip on jar -->
+      <path d="M60,382 Q62,370 60,360 Q58,352 61,346" stroke="#F2A900" stroke-width="5"
+            stroke-linecap="round" fill="none" opacity="0.85"/>
+      <ellipse cx="60" cy="344" rx="4" ry="5" fill="#F2A900" opacity="0.8"/>
+      <!-- small hex on jar -->
+      <path d="M72,430 L76,427 L80,430 L80,436 L76,439 L72,436 Z"
+            fill="none" stroke="rgba(255,224,128,0.5)" stroke-width="1"/>
 
-      <path d="M640,18 Q647,72 644,100 Q642,118 645,128 Q642,116 644,100 Q641,72 637,18Z" fill="url(#dg)"/>
-      <ellipse cx="644" cy="130" rx="7" ry="9" fill="#F2A900" opacity="0.6"/>
+      <!-- ══════════════════════════════════
+           FIGURE
+      ══════════════════════════════════ -->
 
-      <path d="M820,18 Q824,52 822,68 Q820,78 822,84 Q820,75 822,68 Q820,52 818,18Z" fill="url(#dg)"/>
-      <ellipse cx="821" cy="87" rx="4" ry="5" fill="#F2A900" opacity="0.78"/>
+      <!-- ── HAIR (behind head, drawn first) ── -->
+      <!-- main hair body -->
+      <path d="
+        M 110,44
+        C 95,24  105,6   128,3
+        C 148,0  170,4   180,20
+        C 190,32 188,52  182,64
+        C 178,74 172,84  164,90
+        C 156,95 148,93  140,92
+        C 132,91 120,93  110,90
+        C 100,86 94,76   92,64
+        C 90,54  96,48   110,44 Z
+      " fill="url(#hairGrad)"/>
+      <!-- hair highlight / sheen -->
+      <path d="
+        M 118,8
+        C 132,2  150,4   160,12
+        C 155,10 142,8   130,10
+        C 122,12 116,16  114,22
+        C 112,16 114,10  118,8 Z
+      " fill="#3D1C00" opacity="0.9"/>
+      <!-- front wave / quiff -->
+      <path d="
+        M 104,42
+        C 100,32 106,22  118,20
+        C 128,18 140,20  148,26
+        C 154,30 152,38  146,42
+        C 140,46 132,44  124,42
+        C 116,40 108,44  104,42 Z
+      " fill="#2C1200"/>
+      <!-- curl accent -->
+      <path d="M 152,28 C 158,24 163,26 162,32" stroke="#4A2000" stroke-width="2.5"
+            stroke-linecap="round" fill="none"/>
 
-      <path d="M1020,18 Q1026,68 1023,94 Q1021,110 1024,122 Q1021,108 1023,94 Q1020,68 1017,18Z" fill="url(#dg)"/>
-      <ellipse cx="1023" cy="125" rx="5.5" ry="7" fill="#F2A900" opacity="0.68"/>
+      <!-- ── FACE ── -->
+      <path d="
+        M 112,42
+        C 97,48  91,62   93,78
+        C 95,95  106,110 128,114
+        C 150,118 166,110 172,95
+        C 178,80 176,60  164,46
+        C 156,36 145,30  135,30
+        C 124,30 116,36  112,42 Z
+      " fill="url(#skinGrad)"/>
+      <!-- jaw softening -->
+      <path d="M 110,96 C 110,108 120,116 135,116 C 150,116 162,108 162,96"
+            fill="none" stroke="rgba(200,140,80,0.2)" stroke-width="2"/>
 
-      <path d="M1200,18 Q1204,55 1202,76 Q1200,90 1202,98 Q1200,87 1202,76 Q1200,55 1198,18Z" fill="url(#dg)"/>
-      <ellipse cx="1201" cy="101" rx="4" ry="5.5" fill="#F2A900" opacity="0.72"/>
+      <!-- ── EAR (right, visible at 3/4) ── -->
+      <path d="M 172,72 C 180,70 183,76 181,83 C 179,90 174,90 171,85"
+            fill="url(#skinGrad)" stroke="rgba(180,110,60,0.3)" stroke-width="1"/>
 
-      <path d="M1370,18 Q1374,50 1372,66 Q1370,76 1372,82 Q1370,73 1372,66 Q1370,50 1368,18Z" fill="url(#dg)"/>
-      <ellipse cx="1371" cy="85" rx="4" ry="5" fill="#F2A900" opacity="0.7"/>
+      <!-- ── NECK ── -->
+      <path d="
+        M 118,112  C 115,120 114,130 116,138
+        Q 128,143  140,143 Q 152,143  162,138
+        C 164,130 163,120 160,112
+        Q 150,117  140,114  Q 130,117  118,112 Z
+      " fill="url(#skinGrad2)"/>
+      <!-- neck shadow line -->
+      <path d="M 122,136 Q 140,140 158,136" stroke="rgba(160,100,50,0.25)" stroke-width="1.5" fill="none"/>
+
+      <!-- ── EYES ── -->
+      <!-- left eye white -->
+      <ellipse cx="116" cy="68" rx="11" ry="8" fill="white"/>
+      <!-- left iris -->
+      <ellipse cx="118" cy="68" rx="7" ry="7" fill="#4A3020"/>
+      <ellipse cx="118" cy="68" rx="5" ry="5" fill="#2A1800"/>
+      <!-- left catchlight -->
+      <ellipse cx="121" cy="65" rx="2" ry="2" fill="white" opacity="0.9"/>
+      <!-- left lash line -->
+      <path d="M 105,64 C 108,60 115,58 126,63" stroke="#1A0800" stroke-width="2.5"
+            stroke-linecap="round" fill="none"/>
+      <!-- left lower lash -->
+      <path d="M 105,71 C 110,75 120,75 127,72" stroke="#1A0800" stroke-width="1.2"
+            stroke-linecap="round" fill="none" opacity="0.5"/>
+      <!-- left lashes detail -->
+      <line x1="108" y1="62" x2="106" y2="58" stroke="#1A0800" stroke-width="1.2" stroke-linecap="round"/>
+      <line x1="113" y1="59" x2="113" y2="55" stroke="#1A0800" stroke-width="1.2" stroke-linecap="round"/>
+      <line x1="119" y1="59" x2="120" y2="55" stroke="#1A0800" stroke-width="1.2" stroke-linecap="round"/>
+      <line x1="124" y1="61" x2="126" y2="58" stroke="#1A0800" stroke-width="1.2" stroke-linecap="round"/>
+
+      <!-- right eye white -->
+      <ellipse cx="152" cy="68" rx="10" ry="7.5" fill="white"/>
+      <!-- right iris -->
+      <ellipse cx="153" cy="68" rx="6.5" ry="6.5" fill="#4A3020"/>
+      <ellipse cx="153" cy="68" rx="4.5" ry="4.5" fill="#2A1800"/>
+      <!-- right catchlight -->
+      <ellipse cx="156" cy="65" rx="1.8" ry="1.8" fill="white" opacity="0.9"/>
+      <!-- right lash line -->
+      <path d="M 142,64 C 145,60 151,58 162,62" stroke="#1A0800" stroke-width="2.5"
+            stroke-linecap="round" fill="none"/>
+      <path d="M 142,71 C 148,75 156,75 162,72" stroke="#1A0800" stroke-width="1.2"
+            stroke-linecap="round" fill="none" opacity="0.5"/>
+      <line x1="145" y1="62" x2="143" y2="58" stroke="#1A0800" stroke-width="1.2" stroke-linecap="round"/>
+      <line x1="150" y1="59" x2="150" y2="55" stroke="#1A0800" stroke-width="1.2" stroke-linecap="round"/>
+      <line x1="156" y1="59" x2="157" y2="55" stroke="#1A0800" stroke-width="1.2" stroke-linecap="round"/>
+      <line x1="161" y1="62" x2="163" y2="59" stroke="#1A0800" stroke-width="1.2" stroke-linecap="round"/>
+
+      <!-- ── EYEBROWS ── -->
+      <path d="M 104,57 C 109,51 117,49 127,52" stroke="#1A0800" stroke-width="2.8"
+            stroke-linecap="round" fill="none"/>
+      <path d="M 141,52 C 151,49 158,51 163,57" stroke="#1A0800" stroke-width="2.8"
+            stroke-linecap="round" fill="none"/>
+
+      <!-- ── NOSE ── -->
+      <path d="M 134,80 C 130,88 126,90 124,88" stroke="rgba(180,110,60,0.55)"
+            stroke-width="1.5" stroke-linecap="round" fill="none"/>
+      <path d="M 134,80 C 138,88 142,90 144,88" stroke="rgba(180,110,60,0.55)"
+            stroke-width="1.5" stroke-linecap="round" fill="none"/>
+      <ellipse cx="128" cy="89" rx="3" ry="2" fill="rgba(160,100,50,0.2)"/>
+      <ellipse cx="141" cy="89" rx="3" ry="2" fill="rgba(160,100,50,0.2)"/>
+
+      <!-- ── LIPS ── -->
+      <!-- upper lip -->
+      <path d="
+        M 120,100
+        C 122,95 127,93 134,95
+        C 130,93 134,91 137,93
+        C 144,91 149,95 151,100
+        C 148,98 143,97 137,97
+        C 134,97 134,97 134,97
+        C 131,97 126,98  120,100 Z
+      " fill="#C41230"/>
+      <!-- lower lip -->
+      <path d="
+        M 120,100
+        C 124,107 130,110 134,110
+        C 140,110 146,107 151,100
+        C 146,104 140,106 134,106
+        C 128,106 124,104 120,100 Z
+      " fill="#D4203A"/>
+      <!-- lip shine -->
+      <ellipse cx="134" cy="103" rx="8" ry="3" fill="rgba(255,255,255,0.18)"/>
+      <!-- cupid's bow dip -->
+      <path d="M 128,95 L 134,97 L 140,95" stroke="#A01028" stroke-width="1" fill="none"/>
+
+      <!-- ── BLUSH ── -->
+      <ellipse cx="104" cy="84" rx="13" ry="8" fill="#E88060" opacity="0.2"/>
+      <ellipse cx="164" cy="84" rx="13" ry="8" fill="#E88060" opacity="0.2"/>
+
+      <!-- ── SMALL EARRING ── -->
+      <circle cx="174" cy="80" r="3" fill="#F2A900" opacity="0.9"/>
+      <path d="M 174,83 L 173,90 L 175,90 L 176,83" fill="#F2A900" opacity="0.8"/>
+
+      <!-- ── DRESS / TORSO ── -->
+      <!-- Main torso (strapless top) -->
+      <path d="
+        M 96,140
+        C 78,144 62,158 58,175
+        C 54,190 60,204 74,210
+        C 82,215 95,217 102,218
+        Q 118,218 130,218
+        Q 142,218 156,218
+        C 163,217 176,215 184,210
+        C 198,204 204,190 200,175
+        C 196,158 180,144 162,140
+        Q 148,136 130,136
+        Q 112,136  96,140 Z
+      " fill="url(#dressGrad)"/>
+      <!-- neckline ribbon/band -->
+      <path d="M 96,140 Q 113,136 130,135 Q 147,136 162,140"
+            stroke="#A86000" stroke-width="3" stroke-linecap="round" fill="none" opacity="0.7"/>
+      <!-- torso highlight -->
+      <path d="M 104,148 C 100,162 102,180 108,192"
+            stroke="rgba(255,220,100,0.2)" stroke-width="8" stroke-linecap="round" fill="none"/>
+      <!-- torso shadow -->
+      <path d="M 178,148 C 182,164 180,180 174,192"
+            stroke="rgba(0,0,0,0.12)" stroke-width="8" stroke-linecap="round" fill="none"/>
+
+      <!-- ── WAIST ── -->
+      <path d="
+        M 74,210
+        C 68,218 66,228 68,238
+        C 70,245 76,250 86,252
+        Q 104,255 130,256
+        Q 156,255 172,252
+        C 182,250 188,245 190,238
+        C 192,228 190,218 184,210
+        C 176,215 163,217 156,218
+        Q 142,218 130,218
+        Q 118,218 102,218
+        C 95,217 82,215 74,210 Z
+      " fill="#E8A000"/>
+      <!-- waist polka dots -->
+      <circle cx="110" cy="230" r="3.5" fill="rgba(0,0,0,0.18)"/>
+      <circle cx="130" cy="235" r="3.5" fill="rgba(0,0,0,0.18)"/>
+      <circle cx="150" cy="230" r="3.5" fill="rgba(0,0,0,0.18)"/>
+      <circle cx="120" cy="218" r="2.5" fill="rgba(0,0,0,0.14)"/>
+      <circle cx="140" cy="218" r="2.5" fill="rgba(0,0,0,0.14)"/>
+
+      <!-- ── SKIRT ── -->
+      <path d="
+        M 68,238
+        C 56,252 44,272 36,296
+        C 28,320 25,345 26,368
+        C 30,375 40,378 54,372
+        C 66,368 78,360 90,358
+        C 102,356 112,360 118,362
+        Q 124,368 130,368
+        Q 136,368 142,362
+        C 148,360 158,356 170,358
+        C 182,360 194,368 206,372
+        C 220,378 230,375 234,368
+        C 235,345 232,320 224,296
+        C 216,272 204,252 190,238
+        C 182,250 166,255 130,256
+        C 94,255 78,250 68,238 Z
+      " fill="url(#dressSkirt)"/>
+      <!-- skirt dots -->
+      <circle cx="72" cy="275"  r="4.5" fill="rgba(0,0,0,0.15)"/>
+      <circle cx="90" cy="300"  r="4.5" fill="rgba(0,0,0,0.15)"/>
+      <circle cx="64" cy="315"  r="4.5" fill="rgba(0,0,0,0.15)"/>
+      <circle cx="88" cy="340"  r="4.5" fill="rgba(0,0,0,0.15)"/>
+      <circle cx="108" cy="290" r="4.5" fill="rgba(0,0,0,0.15)"/>
+      <circle cx="128" cy="310" r="4.5" fill="rgba(0,0,0,0.15)"/>
+      <circle cx="150" cy="295" r="4.5" fill="rgba(0,0,0,0.15)"/>
+      <circle cx="172" cy="270" r="4.5" fill="rgba(0,0,0,0.15)"/>
+      <circle cx="188" cy="298" r="4.5" fill="rgba(0,0,0,0.15)"/>
+      <circle cx="164" cy="330" r="4.5" fill="rgba(0,0,0,0.15)"/>
+      <circle cx="200" cy="318" r="4.5" fill="rgba(0,0,0,0.15)"/>
+      <circle cx="110" cy="340" r="4.5" fill="rgba(0,0,0,0.15)"/>
+      <!-- skirt highlight left -->
+      <path d="M 52,258 C 44,280 40,310 44,340"
+            stroke="rgba(255,220,100,0.18)" stroke-width="12" stroke-linecap="round" fill="none"/>
+      <!-- skirt highlight right -->
+      <path d="M 208,258 C 216,280 220,310 216,340"
+            stroke="rgba(0,0,0,0.1)" stroke-width="12" stroke-linecap="round" fill="none"/>
+      <!-- skirt hem ruffle -->
+      <path d="
+        M 26,368
+        C 34,362 44,370 54,372
+        C 63,368 72,358 84,356
+        C 93,358 100,364 110,365
+        Q 118,368 124,364
+        Q 128,368 130,368
+        Q 132,368 136,364
+        Q 142,368 150,365
+        C 160,364 167,358 176,356
+        C 188,358 197,368 206,372
+        C 216,370 226,362 234,368
+      " stroke="rgba(255,180,0,0.5)" stroke-width="3" stroke-linecap="round" fill="none"/>
+
+      <!-- ── LEFT ARM (resting on jar) ── -->
+      <path d="
+        M 62,168
+        C 52,174 46,188 45,204
+        C 44,218 48,230 52,240
+        C 56,248 60,252 64,254
+        C 66,254 68,252 68,250
+        C 64,246 61,238 61,226
+        C 61,212 66,200 70,190
+        C 70,182 68,172 62,168 Z
+      " fill="url(#skinGrad2)"/>
+      <!-- left forearm going down to jar -->
+      <path d="
+        M 64,254
+        C 63,264 61,278 58,294
+        C 56,308 54,324 54,342
+        C 56,358 62,370 68,378
+        C 72,382 76,382 78,378
+        C 74,368 70,354 70,340
+        C 70,326 72,310 74,296
+        C 76,282 76,268 74,258
+        C 72,256 68,254 64,254 Z
+      " fill="url(#skinGrad2)"/>
+      <!-- left hand on jar lid -->
+      <ellipse cx="72" cy="380" rx="10" ry="7" fill="url(#skinGrad)" transform="rotate(-10 72 380)"/>
+      <!-- fingers suggestion -->
+      <path d="M 64,378 C 62,372 64,368 68,370" stroke="rgba(200,140,80,0.5)" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+      <path d="M 70,378 C 68,370 70,365 74,368" stroke="rgba(200,140,80,0.5)" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+      <path d="M 76,377 C 76,369 78,364 82,368" stroke="rgba(200,140,80,0.5)" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+
+      <!-- ── RIGHT ARM (raised, bent at elbow) ── -->
+      <!-- upper arm -->
+      <path d="
+        M 196,168
+        C 208,174 218,186 222,198
+        C 226,210 225,222 222,232
+        C 220,238 216,242 212,242
+        C 210,240 208,236 210,228
+        C 212,218 214,208 212,196
+        C 210,185 204,176 196,168 Z
+      " fill="url(#skinGrad2)"/>
+      <!-- forearm going up -->
+      <path d="
+        M 222,232
+        C 226,222 228,210 225,196
+        C 222,182 215,170 208,162
+        C 205,158 202,158 202,162
+        C 206,172 210,182 212,195
+        C 214,208 212,220 212,232
+        C 214,238 218,240 222,232 Z
+      " fill="url(#skinGrad2)"/>
+      <!-- right hand (waving / beckoning) -->
+      <ellipse cx="207" cy="157" rx="12" ry="10" fill="url(#skinGrad)"
+               transform="rotate(-30 207 157)"/>
+      <!-- fingers -->
+      <path d="M 200,150 C 196,142 198,136 202,138" stroke="url(#skinGrad)" stroke-width="5"
+            stroke-linecap="round" fill="none"/>
+      <path d="M 206,147 C 204,138 206,132 210,135" stroke="url(#skinGrad)" stroke-width="5"
+            stroke-linecap="round" fill="none"/>
+      <path d="M 213,148 C 213,139 216,134 220,138" stroke="url(#skinGrad)" stroke-width="5"
+            stroke-linecap="round" fill="none"/>
+      <path d="M 218,152 C 220,145 223,140 226,145" stroke="url(#skinGrad)" stroke-width="4.5"
+            stroke-linecap="round" fill="none"/>
+
+      <!-- ── GLOVE accents (right arm) ── -->
+      <path d="M 222,230 C 224,222 225,210 222,198"
+            stroke="rgba(200,140,0,0.3)" stroke-width="3" stroke-linecap="round" fill="none"/>
+
+      <!-- ── LEGS ── -->
+      <!-- left leg -->
+      <path d="
+        M 104,370
+        C 102,388 100,410 98,432
+        C 97,448 96,460 97,472
+        C 98,480 102,483 107,482
+        C 112,482 116,479 117,472
+        C 116,460 114,448 113,432
+        C 112,410 112,388 114,370
+        C 110,368 106,368 104,370 Z
+      " fill="url(#skinGrad2)"/>
+      <!-- right leg -->
+      <path d="
+        M 146,370
+        C 148,388 150,410 152,432
+        C 153,448 154,460 153,472
+        C 152,480 148,483 143,482
+        C 138,482 134,479 133,472
+        C 134,460 136,448 137,432
+        C 138,410 138,388 136,370
+        C 140,368 144,368 146,370 Z
+      " fill="url(#skinGrad2)"/>
+
+      <!-- ── SHOES ── -->
+      <!-- left shoe -->
+      <path d="M 97,472 C 92,476 86,480 82,482 C 78,483 76,480 78,477
+               C 82,474 92,472 97,472 Z" fill="#1A0800"/>
+      <path d="M 97,472 C 100,476 106,480 110,481 C 114,481 117,478 117,472
+               L 107,472 Z" fill="#1A0800"/>
+      <!-- left heel -->
+      <rect x="78" y="477" width="5" height="16" rx="2" fill="#2A1000"/>
+      <!-- left heel platform -->
+      <rect x="76" y="492" width="10" height="3" rx="1" fill="#1A0800"/>
+      <!-- red sole accent -->
+      <rect x="78" y="492" width="10" height="1.5" rx="1" fill="#C41230" opacity="0.8"/>
+
+      <!-- right shoe -->
+      <path d="M 153,472 C 158,476 164,480 168,482 C 172,483 174,480 172,477
+               C 168,474 158,472 153,472 Z" fill="#1A0800"/>
+      <path d="M 153,472 C 150,476 144,480 140,481 C 136,481 133,478 133,472
+               L 143,472 Z" fill="#1A0800"/>
+      <!-- right heel -->
+      <rect x="167" y="477" width="5" height="16" rx="2" fill="#2A1000"/>
+      <rect x="165" y="492" width="10" height="3" rx="1" fill="#1A0800"/>
+      <rect x="165" y="492" width="10" height="1.5" rx="1" fill="#C41230" opacity="0.8"/>
+
+      <!-- ── NECKLINE BOW / DETAIL ── -->
+      <path d="M 122,137 C 118,132 115,128 118,125 C 120,122 125,124 130,136
+               C 135,124 140,122 142,125 C 145,128 142,132 138,137
+               C 136,140 130,140 130,140 C 130,140 124,140 122,137 Z"
+            fill="#C07200" opacity="0.9"/>
+      <circle cx="130" cy="138" r="4" fill="#F2A900"/>
+
+      <!-- ── SPARKLES around figure ── -->
+      <g fill="#FFD700" opacity="0.7">
+        <path d="M 246,100  L 248,106 L 254,106 L 249,110 L 251,116 L 246,112 L 241,116 L 243,110 L 238,106 L 244,106 Z" transform="scale(0.65)"/>
+        <path d="M 45,220  L 47,225 L 52,225 L 48,228 L 50,233 L 45,230 L 40,233 L 42,228 L 38,225 L 43,225 Z" transform="scale(0.7)"/>
+        <path d="M 380,300 L 382,305 L 387,305 L 383,308 L 385,313 L 380,310 L 375,313 L 377,308 L 373,305 L 378,305 Z" transform="scale(0.55)"/>
+        <path d="M 30,400  L 32,404 L 36,404 L 33,407 L 34,411 L 30,408 L 26,411 L 27,407 L 24,404 L 28,404 Z" transform="scale(0.8)"/>
+      </g>
+
     </svg>
   </div>
+</section>
 
-  <!-- ═══ PAGE CONTENT ═══ -->
-  <div class="page">
+<!-- DIVIDER -->
+<div class="divider" aria-hidden="true"><span>⬡</span></div>
 
-    <!-- Pin-up figure -->
-    <div class="figure-col">
-      <svg class="figure-svg" viewBox="0 0 220 500" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <linearGradient id="fig" x1="10%" y1="0%" x2="90%" y2="100%">
-            <stop offset="0%"   stop-color="#FFD700"/>
-            <stop offset="55%"  stop-color="#F2A900"/>
-            <stop offset="100%" stop-color="#B36800"/>
-          </linearGradient>
-          <filter id="sg" x="-20%" y="-20%" width="140%" height="140%">
-            <feGaussianBlur in="SourceAlpha" stdDeviation="4" result="b"/>
-            <feOffset dx="0" dy="2" result="o"/>
-            <feFlood flood-color="#F2A900" flood-opacity="0.4" result="c"/>
-            <feComposite in="c" in2="o" operator="in" result="s"/>
-            <feMerge><feMergeNode in="s"/><feMergeNode in="SourceGraphic"/></feMerge>
-          </filter>
-        </defs>
+<!-- ════════════════════════════════
+     FEATURES
+════════════════════════════════ -->
+<section id="features">
+  <p class="section-label">Capabilities</p>
+  <h2 class="section-title">Every attack surface is a <em>data source</em></h2>
 
-        <!-- ── FLOWING HAIR (behind head) ── -->
-        <path d="M82,32 Q60,18 52,48 Q48,72 55,96 Q62,116 74,126
-                 Q70,108 68,88 Q66,66 72,48 Q78,36 82,32Z"
-              fill="url(#fig)" opacity="0.95"/>
-        <!-- long wave down back -->
-        <path d="M88,64 Q64,90 58,132 Q53,168 60,198
-                 Q65,203 68,196 Q62,166 69,132 Q76,98 92,76Z"
-              fill="url(#fig)" opacity="0.85"/>
-        <!-- top sweep -->
-        <path d="M78,28 Q100,14 122,22 Q138,30 136,50
-                 Q128,38 112,34 Q98,30 90,42 Q86,48 84,58
-                 Q80,44 78,28Z"
-              fill="url(#fig)"/>
-
-        <!-- ── HEAD ── -->
-        <ellipse cx="105" cy="68" rx="28" ry="33" fill="url(#fig)" filter="url(#sg)"/>
-
-        <!-- ── NECK ── -->
-        <path d="M94,98 L92,116 Q99,121 105,121 Q111,121 118,116 L116,98
-                 Q111,104 105,104 Q99,104 94,98Z"
-              fill="url(#fig)"/>
-
-        <!-- ── SHOULDERS & BUST ── -->
-        <path d="M62,122 Q46,134 42,152 Q40,166 48,172
-                 Q54,118 92,116Z"
-              fill="url(#fig)"/>
-        <path d="M148,122 Q164,134 168,152 Q170,166 162,172
-                 Q156,118 118,116Z"
-              fill="url(#fig)"/>
-        <!-- torso / hourglass -->
-        <path d="M48,152 Q44,168 48,184 Q54,196 68,202
-                 Q84,208 105,208 Q126,208 142,202
-                 Q156,196 162,184 Q166,168 162,152
-                 Q146,162 118,166 Q112,168 105,168
-                 Q98,168 92,166 Q64,162 48,152Z"
-              fill="url(#fig)"/>
-
-        <!-- ── WAIST / HIPS ── -->
-        <path d="M60,196 Q52,212 54,230 Q58,246 72,254
-                 Q86,262 105,264 Q124,262 138,254
-                 Q152,246 156,230 Q158,212 150,196
-                 Q134,208 105,210 Q76,208 60,196Z"
-              fill="url(#fig)"/>
-
-        <!-- ── LEFT ARM (down, gloved feel) ── -->
-        <path d="M48,152 Q34,164 28,186 Q24,202 28,216
-                 Q32,222 38,218 Q34,204 38,188 Q44,170 56,158Z"
-              fill="url(#fig)"/>
-        <ellipse cx="32" cy="220" rx="8" ry="6" fill="url(#fig)" transform="rotate(-20 32 220)"/>
-
-        <!-- ── RIGHT ARM (raised — classic pose) ── -->
-        <path d="M162,148 Q176,134 184,116 Q190,100 187,86
-                 Q183,78 178,82 Q181,96 177,110
-                 Q172,126 160,140Z"
-              fill="url(#fig)"/>
-        <!-- hand -->
-        <ellipse cx="185" cy="83" rx="8" ry="6" fill="url(#fig)" transform="rotate(-40 185 83)"/>
-        <!-- index finger up -->
-        <path d="M182,79 Q186,66 190,74 Q188,68 185,79Z" fill="url(#fig)"/>
-
-        <!-- ── SKIRT (full, flared 50s style) ── -->
-        <path d="M56,240 Q44,270 46,302 Q48,326 56,338
-                 Q44,322 46,298 Q47,274 60,248Z"
-              fill="url(#fig)" opacity="0.88"/>
-        <path d="M154,240 Q166,270 164,302 Q162,326 154,338
-                 Q166,322 164,298 Q163,274 150,248Z"
-              fill="url(#fig)" opacity="0.88"/>
-        <!-- main skirt body -->
-        <path d="M54,240 Q46,268 48,298 Q50,322 60,338
-                 Q72,352 105,356 Q138,352 150,338
-                 Q160,322 162,298 Q164,268 156,240
-                 Q140,254 105,258 Q70,254 54,240Z"
-              fill="url(#fig)"/>
-        <!-- hem ruffle -->
-        <path d="M48,298 Q60,312 76,306 Q90,314 105,308
-                 Q120,314 134,306 Q150,312 162,298
-                 Q152,322 138,328 Q122,322 105,328
-                 Q88,322 72,328 Q58,322 48,298Z"
-              fill="url(#fig)" opacity="0.9"/>
-
-        <!-- ── LEGS ── -->
-        <!-- left leg -->
-        <path d="M78,350 Q72,382 70,412 Q68,436 72,456
-                 Q76,468 84,470 Q90,470 93,462
-                 Q88,454 88,430 Q88,404 90,374 Q91,360 92,350Z"
-              fill="url(#fig)"/>
-        <!-- left stiletto -->
-        <path d="M70,456 Q65,468 68,476 Q72,484 82,484
-                 Q90,484 94,476 Q92,462 86,470Z"
-              fill="url(#fig)"/>
-        <path d="M68,476 L64,490 L72,490 L72,476Z" fill="url(#fig)" opacity="0.85"/>
-
-        <!-- right leg -->
-        <path d="M132,350 Q138,382 140,412 Q142,436 138,456
-                 Q134,468 126,470 Q120,470 117,462
-                 Q122,454 122,430 Q122,404 120,374 Q119,360 118,350Z"
-              fill="url(#fig)"/>
-        <!-- right stiletto -->
-        <path d="M140,456 Q145,468 142,476 Q138,484 128,484
-                 Q120,484 116,476 Q118,462 124,470Z"
-              fill="url(#fig)"/>
-        <path d="M142,476 L146,490 L138,490 L138,476Z" fill="url(#fig)" opacity="0.85"/>
-
-        <!-- ── SPARKLES ── -->
-        <g fill="#FFD700" opacity="0.55">
-          <!-- star helper: 5pt star centered -->
-          <polygon points="30,90 32,96 38,96 33,100 35,106 30,102 25,106 27,100 22,96 28,96"
-                   transform="scale(0.55) translate(20,-30)"/>
-          <polygon points="30,90 32,96 38,96 33,100 35,106 30,102 25,106 27,100 22,96 28,96"
-                   transform="scale(0.45) translate(330,220)"/>
-          <polygon points="30,90 32,96 38,96 33,100 35,106 30,102 25,106 27,100 22,96 28,96"
-                   transform="scale(0.5) translate(25,440)"/>
-          <polygon points="30,90 32,96 38,96 33,100 35,106 30,102 25,106 27,100 22,96 28,96"
-                   transform="scale(0.4) translate(360,100)"/>
-        </g>
-      </svg>
+  <div class="features-grid">
+    <div class="feat-card">
+      <span class="feat-icon">🕸</span>
+      <div class="feat-name">Protocol-layer tracing</div>
+      <p class="feat-desc">Dual instrumentation at the MCP transport layer and individual tool handlers. No interaction escapes the trace.</p>
     </div>
+    <div class="feat-card">
+      <span class="feat-icon">🎭</span>
+      <div class="feat-name">Mimic success</div>
+      <p class="feat-desc">Fake tool responses that look authentic. Attackers think they succeeded — we know exactly what they tried.</p>
+    </div>
+    <div class="feat-card">
+      <span class="feat-icon">🏷</span>
+      <div class="feat-name">Aggressive tagging</div>
+      <p class="feat-desc">Agent fingerprint, tool name, param patterns, anomaly flags — every span gets the full taxonomy treatment.</p>
+    </div>
+    <div class="feat-card">
+      <span class="feat-icon">📡</span>
+      <div class="feat-name">Real-time metrics</div>
+      <p class="feat-desc">Prometheus scrape ≤15s. Grafana auto-refresh at 10s. Live dashboards with alerting from the first probe.</p>
+    </div>
+    <div class="feat-card">
+      <span class="feat-icon">🔬</span>
+      <div class="feat-name">Distributed tracing</div>
+      <p class="feat-desc">Full OpenTelemetry trace propagation through Jaeger. Reconstruct any attack session end-to-end in milliseconds.</p>
+    </div>
+    <div class="feat-card">
+      <span class="feat-icon">📦</span>
+      <div class="feat-name">Deploy anywhere</div>
+      <p class="feat-desc">Docker Compose for local dev. Helm chart for K8s. One-command stand-up, zero infrastructure lock-in.</p>
+    </div>
+  </div>
+</section>
 
-    <!-- Text content -->
-    <div class="text-col">
-      <div class="wordmark">
-        <span class="w-honey">honey</span><span class="w-pot">pot</span><span class="w-dot">.</span><span class="w-vip">VIP</span>
-      </div>
+<!-- DIVIDER -->
+<div class="divider" aria-hidden="true"><span>⬡</span></div>
 
-      <p class="tagline">The sweetest trap on the internet.</p>
+<!-- ════════════════════════════════
+     HOW IT WORKS
+════════════════════════════════ -->
+<section id="how">
+  <p class="section-label">How it works</p>
+  <h2 class="section-title">Three phases.<br>Zero warnings given.</h2>
 
-      <div class="rule"><span class="rule-hex">⬡</span></div>
-
-      <p class="desc">
-        Research-grade honeypot infrastructure<br>
-        for observing agentic attacks in the wild.<br>
-        <br>
-        Every probe logged. Every tool call traced.<br>
-        Protocol-layer &amp; handler-layer instrumentation.<br>
-        Real-time dashboards. Zero mercy.<br>
-        <br>
-        They always come back for the honey.
+  <div class="steps">
+    <div>
+      <div class="step-num"><span class="step-circle">01</span> Lure</div>
+      <h3 class="step-title">The trap is set</h3>
+      <p class="step-body">
+        Fake MCP endpoints are exposed — tools that look real, respond real, and invite deep exploration.
+        The honeypot presents as a fully operational server.
       </p>
-
-      <div class="rule"><span class="rule-hex">⬡</span></div>
-
-      <a href="#" class="cta"><span>ENTER THE POT</span></a>
+      <span class="step-tag">MCP SDK · SSE transport</span>
     </div>
-
+    <div>
+      <div class="step-num"><span class="step-circle">02</span> Catch</div>
+      <h3 class="step-title">Every move observed</h3>
+      <p class="step-body">
+        Dual-layer OTel instrumentation captures the full interaction — protocol events, tool invocations,
+        parameter shapes, timing, session IDs, and anomaly signals.
+      </p>
+      <span class="step-tag">OpenTelemetry · Jaeger</span>
+    </div>
+    <div>
+      <div class="step-num"><span class="step-circle">03</span> Analyse</div>
+      <h3 class="step-title">Intelligence extracted</h3>
+      <p class="step-body">
+        Prometheus aggregates attack patterns in real-time. Grafana surfaces the taxonomy.
+        Every attacker session becomes a labelled data point.
+      </p>
+      <span class="step-tag">Prometheus · Grafana</span>
+    </div>
   </div>
+</section>
 
-  <!-- ═══ STATUS BAR ═══ -->
-  <div class="status-bar">
-    <div class="pulse-dot"></div>
-    <span>HONEYPOT ACTIVE — ALL INTERACTIONS MONITORED &amp; LOGGED</span>
+<!-- DIVIDER -->
+<div class="divider" aria-hidden="true"><span>⬡</span></div>
+
+<!-- ════════════════════════════════
+     TECH STACK
+════════════════════════════════ -->
+<section id="stack">
+  <p class="section-label">Stack</p>
+  <h2 class="section-title" style="font-size:1.6rem; margin-bottom:0.5rem;">Built on boring, proven infrastructure</h2>
+  <div class="stack-row">
+    <span class="stack-badge">Python 3.12</span>
+    <span class="stack-badge">MCP SDK</span>
+    <span class="stack-badge">OpenTelemetry</span>
+    <span class="stack-badge">OTel Collector Contrib</span>
+    <span class="stack-badge">Prometheus</span>
+    <span class="stack-badge">Jaeger</span>
+    <span class="stack-badge">Grafana</span>
+    <span class="stack-badge">Docker Compose</span>
+    <span class="stack-badge">Helm / K8s</span>
+    <span class="stack-badge">GitHub Actions</span>
   </div>
+</section>
 
-  <!-- ═══ BEES ═══ -->
-  <script>
-    [0, 1, 2].forEach(function(i) {
-      var el = document.createElement('div');
-      el.className = 'bee';
-      el.textContent = '🐝';
-      el.style.left  = (15 + Math.random() * 70) + 'vw';
-      el.style.top   = (20 + Math.random() * 60) + 'vh';
-      el.style.setProperty('--tx', (Math.random() * 500 - 250) + 'px');
-      el.style.setProperty('--ty', (Math.random() * 500 - 250) + 'px');
-      el.style.setProperty('--tr', (Math.random() * 720 - 360) + 'deg');
-      el.style.animationDuration = (10 + Math.random() * 14) + 's';
-      el.style.animationDelay    = (i * 4) + 's';
-      document.body.appendChild(el);
-    });
-  </script>
+<!-- ════════════════════════════════
+     CTA BANNER
+════════════════════════════════ -->
+<section id="cta-banner">
+  <h2 class="wordmark">
+    <span class="wm-h">honey</span><span class="wm-p">pot</span><span class="wm-dot">.</span><span class="wm-vip">VIP</span>
+  </h2>
+  <p class="cta-sub">They always come back for the honey.</p>
+  <div style="display:flex; gap:1rem; justify-content:center; flex-wrap:wrap;">
+    <a href="https://github.com/todie/honeypot.vip" class="btn-primary">View on GitHub</a>
+    <a href="https://github.com/todie/honeypot.vip/issues" class="btn-ghost">Report an attack pattern</a>
+  </div>
+</section>
+
+<!-- ════════════════════════════════
+     FOOTER
+════════════════════════════════ -->
+<footer>
+  <span class="mono"><span class="pulse-dot"></span>Honeypot active — all interactions logged</span>
+  <span class="mono">honeypot.vip — research infrastructure</span>
+  <span class="mono">© 2026 todie</span>
+</footer>
+
+<!-- ─── FLOATING BEES ─── -->
+<script>
+  [0,1,2].forEach(function(i) {
+    var el = document.createElement('div');
+    el.className = 'bee';
+    el.textContent = '🐝';
+    el.style.left = (10 + Math.random() * 80) + 'vw';
+    el.style.top  = (15 + Math.random() * 70) + 'vh';
+    el.style.setProperty('--tx', (Math.random()*600-300) + 'px');
+    el.style.setProperty('--ty', (Math.random()*600-300) + 'px');
+    el.style.setProperty('--tr', (Math.random()*720-360) + 'deg');
+    el.style.animationDuration = (12 + Math.random()*16) + 's';
+    el.style.animationDelay    = (i * 5) + 's';
+    document.body.appendChild(el);
+  });
+</script>
 
 </body>
 </html>
